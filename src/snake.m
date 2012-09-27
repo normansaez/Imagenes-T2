@@ -1,17 +1,9 @@
-%function [m] = snake(img)
-clear all
-%%
-img_dir = '../img';
-addpath(img_dir);
-filename = fullfile(img_dir,'football.jpeg');
-img = imread(filename);
-img = rgb2gray(img);
-%%
+function [m] = snake(img)
 imshow(img,[]);
 [x,y] = getpts;
-% XXX: Al menos 3 puntos de control por B-spline
 
 B = 0.5*[1,1,0;-2 2 0;1 -2 1];
+
 u = sym('u');
 U = [u^2, u, 1];
 
@@ -38,4 +30,5 @@ for j=1:1:length(x)-2
     C_u_vals(j).y = eval(Cy);
     
 end
+
 m = img;
