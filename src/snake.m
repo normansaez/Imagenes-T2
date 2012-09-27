@@ -22,6 +22,7 @@ u = 0:1/u2eval:1-1/u2eval;
 
 C_u_vals = struct([]);
 for j=1:1:length(x)-2
+    
     px(1) = x(j);
     px(2) = x(j+1);
     px(3) = x(j+2);
@@ -35,5 +36,6 @@ for j=1:1:length(x)-2
     
     C_u_vals(j).x = eval(Cx);
     C_u_vals(j).y = eval(Cy);
+    
 end
 m = img;
