@@ -1,6 +1,21 @@
-function [m] = snake(img)
+%function [m] = snake(img)
+%% Getting Image
+close all;
+clear all;
+img_dir = '../img';
+addpath(img_dir);
+filename = fullfile(img_dir,'football.jpeg');
+img = imread(filename);
+img = rgb2gray(img);
+%figure, imshow(img,[]);
+
 imshow(img,[]);
 [x,y] = getpts;
+
+plot(x,y,'*r')
+set(gca,'YDir','reverse');
+hold on
+pause
 
 B = 0.5*[1,1,0;-2 2 0;1 -2 1];
 
@@ -12,23 +27,26 @@ U_times_B =  U * B;
 u2eval = 20;
 u = 0:1/u2eval:1-1/u2eval;
 
-C_u_vals = struct([]);
-for j=1:1:length(x)-2
+C_s = struct([]);
+for j=2:1:length(x)-1
     
-    px(1) = x(j);
-    px(2) = x(j+1);
-    px(3) = x(j+2);
+    px(1) = x(j-1);
+    px(2) = x(j);
+    px(3) = x(j+1);
     
-    py(1) = y(j);
-    py(2) = y(j+1);
-    py(3) = y(j+2);
+    py(1) = y(j-1);
+    py(2) = y(j);
+    py(3) = y(j+1);
     
-    Cx =  U_times_B * px';
-    Cy =  U_times_B * py';    
+    Sx =  U_times_B * px';
+    Sy =  U_times_B * py';    
     
-    C_u_vals(j).x = eval(Cx);
-    C_u_vals(j).y = eval(Cy);
-    
+    i = j - 1;
+    fprintf('seg %d\n',i)
+    C_s(i).x = eval(Sx);
+    C_s(i).y = eval(Sy);
+    plot(C_s(i).x,C_s(i).y)
+    hold on
 end
-
+   
 m = img;
