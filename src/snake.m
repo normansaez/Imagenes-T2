@@ -24,7 +24,7 @@ U = [u^2, u, 1];
 
 U_times_B =  U * B;
 
-u2eval = 10000;
+u2eval = 20;
 u = 0:1/u2eval:1-1/u2eval;
 
 C_s = struct([]);
