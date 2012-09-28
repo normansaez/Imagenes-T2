@@ -1,4 +1,4 @@
-function [seg_img] = clusters(img, num_class)
+function [seg_img] = clusters(img, k)
 
 %% Getting Image
 img_dir = '../img';
@@ -8,4 +8,5 @@ img = imread(filename);
 img = rgb2gray(img);
 figure, imshow(img,[]);
 
-seg_img = img;
+index = find(img(:));
+centroids =(1:k)*max(img(:))/(k+1);

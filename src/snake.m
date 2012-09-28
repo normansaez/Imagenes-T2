@@ -73,20 +73,12 @@ for iteration=1:1:1
     
     a = 1;
     elastic = struct([]);
-    for j=2:1:length(x)-1
-        px1 = diff(x(j-1),2);
-        px2 = diff(x(j),2);
-        px3 = diff(x(j+1),2);
+    ddx = gradient(gradient(x));
+    ddy = gradient(gradient(y));
         
-        py1 = diff(y(j-1),2);
-        py2 = diff(y(j),2);
-        py3 = diff(y(j+1),2);
-        
-        %elastic(j-1).x = a*(px1-2.*px2+px3);
-        %elastic(j-1).y = a*(py1-2.*py2+py3);
-        
-        elastic(j-1).x = 0;
-        elastic(j-1).y = 0;
+    for j=2:1:length(ddx)-1
+        elastic(j-1).x = a*(ddx(j-1)-2.*ddx(j)+ddx(j+1));
+        elastic(j-1).y = a*(ddy(j-1)-2.*ddy(j)+ddy(j+1));
     end
     
     v = eval(U_times_B);
@@ -99,14 +91,18 @@ for iteration=1:1:1
     
     invBm= Bm^(-1);
     
-    T = struct([]);
     t = 1;
-    force = struct([]);
+    sum_x = zeros(1,length(x)-2);
+    sum_y = zeros(1,length(x)-2);
     for i=1:1:length(x)-2
-        force(i).x = zi(i).zi + elastic(i).x;
-        force(i).y = zi(i).zi + elastic(i).y;
-        T(i).x = t.*invBm.*force(i).x;
-        T(i).y = t.*invBm.*force(i).y;
-    end   
+        sum_x(i) = zi(i).zi + elastic(i).x;
+        sum_y(i) = zi(i).zi + elastic(i).y;
+    end
+    
+    new_x = t*invBm*sum_x';
+    new_y = t*invBm*sum_y';
+    
+    %x = new_x;
+    %y = new_y;
 end
 m = img;
