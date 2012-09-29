@@ -8,9 +8,9 @@ addpath(img_dir);
 filename = fullfile(img_dir,'football.jpeg');
 img = imread(filename);
 img = rgb2gray(img);
-figure, imshow(img,[]);
+figure(1), imshow(img,[]);
 
-imshow(img,[]);
+hold on
 [x,y] = getpts;
 
 % Control poligon
@@ -20,11 +20,13 @@ x(length(x)+1) = x(2);
 y(length(y)+1) = y(2);
 % Control poligon
 
-plot(x,y,'--r')
-set(gca,'YDir','reverse');
-hold on
-%pause
-for iteration=1:1:1
+
+for iteration=1:200
+    figure(1)
+    plot(x,y,'--r')
+    set(gca,'YDir','reverse');
+    hold on
+    %pause
     B = 0.5*[1,1,0;-2 2 0;1 -2 1];
     
     u = sym('u');
@@ -59,26 +61,26 @@ for iteration=1:1:1
         hold on
         %pause
     end
-    
-    [Fx, Fy] = gradient(gradient(double(img)).^2);
+    if iteration == 1
+        [Fx, Fy] = gradient(gradient(double(img)).^2);
+        Fx = Fx/max(Fx(:));
+        Fy = Fy/max(Fx(:));
+    end
     [mx,my]  = meshgrid(1:483,1:336);
     
     u = 11;
-    zi = struct([]);
+    grad = struct([]);
     for i=1:1:length(x)-2
-        zi(i).zi = interp2(mx,my,Fx,C_s(i).x(u),C_s(i).y(u));
-        zi(i).x = C_s(i).x(u);
-        zi(i).y = C_s(i).y(u);
+        grad(i).x = interp2(mx,my,Fx,C_s(i).x(u),C_s(i).y(u));
+        grad(i).y = interp2(mx,my,Fy,C_s(i).x(u),C_s(i).y(u));
     end
     
-    a = 1;
+    a = 1e0;
     elastic = struct([]);
-    ddx = gradient(gradient(x));
-    ddy = gradient(gradient(y));
-        
-    for j=2:1:length(ddx)-1
-        elastic(j-1).x = a*(ddx(j-1)-2.*ddx(j)+ddx(j+1));
-        elastic(j-1).y = a*(ddy(j-1)-2.*ddy(j)+ddy(j+1));
+    
+    for j=2:1:length(x)-1
+        elastic(j-1).x = a*(x(j-1)-2.*x(j)+x(j+1));
+        elastic(j-1).y = a*(y(j-1)-2.*y(j)+y(j+1));
     end
     
     v = eval(U_times_B);
@@ -88,21 +90,45 @@ for iteration=1:1:1
     Bm(2,3) = v(3);
     Bm(2,1) = v(1);
     Bm(3,2) = v(1);
-    
-    invBm= Bm^(-1);
-    
-    t = 1;
+    if iteration == 1
+        invBm= Bm^(-1);
+    end
+    t = 0.1;
     sum_x = zeros(1,length(x)-2);
     sum_y = zeros(1,length(x)-2);
     for i=1:1:length(x)-2
-        sum_x(i) = zi(i).zi + elastic(i).x;
-        sum_y(i) = zi(i).zi + elastic(i).y;
+        sum_x(i) = grad(i).x + elastic(i).x;
+        sum_y(i) = grad(i).y + elastic(i).y;
     end
     
-    new_x = t*invBm*sum_x';
-    new_y = t*invBm*sum_y';
     
-    %x = new_x;
-    %y = new_y;
+    
+    for j=2:1:length(sum_x)-1
+        sumx(1) = sum_x(j-1);
+        sumx(2) = sum_x(j);
+        sumx(3) = sum_x(j+1);
+        
+        sumy(1) = sum_y(j-1);
+        sumy(2) = sum_y(j);
+        sumy(3) = sum_y(j+1);
+        
+        delta_x = t*invBm*sumx';
+        delta_y = t*invBm*sumy';
+        
+        %figure(3)
+        %plot(iteration,delta_y)
+        %hold on
+        
+        x(j-1) = x(j-1)   + delta_x(1);
+        x(j)   = x(j)     + delta_x(2);
+        x(j+1) = x(j+1)   + delta_x(3);
+        
+        y(j-1)   = y(j-1)   + delta_y(1);
+        y(j)     = y(j)     + delta_y(2);
+        y(j+1)   = y(j+1) + delta_y(3);
+    end
 end
-m = img;
+figure, imshow(img,[])
+hold on
+plot(x,y,'--r')
+hold on
