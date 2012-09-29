@@ -12,13 +12,11 @@ filename = fullfile(img_dir,'football.jpeg');
 img = imread(filename);
 img = rgb2gray(img);
 [col row] = size(img);
-figure(1)
+figure(1);
 imshow(img,[]);
-hold on
 
 %% Get Points from mouse
 [x,y] = getpts;
-
 init_x = x;
 init_y = y;
  
@@ -35,6 +33,7 @@ step = 20;
 u = sym('u');
 U = [1, u, u^2];
 U_times_B =  U * B;
+
 %% v = U*B, evaluated in one point 
 u = 11;
 v = eval(U_times_B);
@@ -59,14 +58,26 @@ Bm_inv = Bm^(-1);
 %% Useful vars    
 number_of_points = length(x);
 number_of_segments = number_of_points-2;
+Cs_init = struct([]);
 
 for iteration=1:200
+    figure(1);
+    imshow(img,[]);
+    hold on;
     %Plot control poligon
-    figure(1)
-    plot(x,y,'--r')
+    figure(1);
+    plot(x,y,'--r');
     set(gca,'YDir','reverse');
-    hold on
-    %pause
+    
+    %Plot control poligon
+    figure(1);
+    plot(x,y,'xg');
+    set(gca,'YDir','reverse');
+    
+    %initial points
+    figure(1);
+    plot(init_x,init_y,'squareb');
+    set(gca,'YDir','reverse');
     
     C_s = struct([]);
     for j=2:1:number_of_points-1
@@ -91,11 +102,22 @@ for iteration=1:200
         C_s(i).x = eval(Sx);
         C_s(i).y = eval(Sy);
         
+        figure(1)
         plot(C_s(i).x,C_s(i).y,'-y')
         set(gca,'YDir','reverse');
-        hold on
         %pause
     end
+    %Just to plot first Cs
+    if iteration == 1
+        Cs_init = C_s;
+    end
+    for counter=1:1:number_of_segments
+        figure(1)
+        plot(Cs_init(counter).x,Cs_init(counter).y,'-w')
+        set(gca,'YDir','reverse');
+        
+    end
+    
     u_index = 11;
     grad = struct([]);
     for i=1:1:number_of_segments
@@ -135,10 +157,6 @@ for iteration=1:200
         delta_x = viscosidad*Bm_inv*sumx';
         delta_y = viscosidad*Bm_inv*sumy';
         
-        %figure(3)
-        %plot(iteration,delta_y)
-        %hold on
-        
         x(j-1) = x(j-1)   + delta_x(1);
         x(j)   = x(j)     + delta_x(2);
         x(j+1) = x(j+1)   + delta_x(3);
@@ -146,22 +164,14 @@ for iteration=1:200
         y(j-1)   = y(j-1)   + delta_y(1);
         y(j)     = y(j)     + delta_y(2);
         y(j+1)   = y(j+1)   + delta_y(3);
+        
+        %figure(2);
+        %plot(iteration,delta_y);
+
     end
     x(end-1) = x(1);
     y(end-1) = y(1);
     x(end)   = x(2);
     y(end)   = y(2);
+    hold off;
 end
-figure, imshow(img,[])
-hold on
-plot(x,y,'--r')
-set(gca,'YDir','reverse');
-hold on
-for i=1:1:number_of_segments
-    plot(C_s(i).x,C_s(i).y,'-y')
-    set(gca,'YDir','reverse');
-    hold on
-end
-plot(init_x,init_y,'*b')
-set(gca,'YDir','reverse');
-hold on
