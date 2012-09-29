@@ -1,42 +1,46 @@
-%% Getting Image
 close all;
 clear all;
+
+%% Snake parameters
+elasticidad = 1e-1;
+viscosidad = 1e-2;
+
+%% Getting Image
 img_dir = '../img';
 addpath(img_dir);
 filename = fullfile(img_dir,'football.jpeg');
 img = imread(filename);
 img = rgb2gray(img);
+[col row] = size(img);
 figure(1)
 imshow(img,[]);
 hold on
+
+%% Get Points from mouse
 [x,y] = getpts;
 
 init_x = x;
 init_y = y;
  
     
-% Control poligon
+%% Close Poligon:  
 x(end+1) = x(1);
 y(end+1) = y(1);
 x(end+1) = x(2);
 y(end+1) = y(2);
-% Control poligon
 
+%% U*B
 B = 0.5*[1,1,0;-2 2 0;1 -2 1];
-
+step = 20;
 u = sym('u');
 U = [1, u, u^2];
-
 U_times_B =  U * B;
-
-u2eval = 20;
-u = 0:1/u2eval:1-1/u2eval;
-C_s = struct([]);
-[Fx, Fy] = gradient(abs(gradient(double(img)).^2));
-[mx,my]  = meshgrid(1:483,1:336);
+%% v = U*B, evaluated in one point 
 u = 11;
 v = eval(U_times_B);
-u = 0:1/u2eval:1-1/u2eval;
+
+%% Bm , v and inv(B)
+u = linspace(0,1,step);
 Bm = diag([v(2),v(2),v(2)]);
 Bm(1,2) = v(3);
 Bm(2,3) = v(3);
@@ -45,21 +49,26 @@ Bm(2,1) = v(1);
 Bm(3,2) = v(1);
 Bm(3,1) = v(3);
 
-invBm= Bm^(-1);
+Bm_inv = Bm^(-1);
 
-elasticidad = 1e-3;
-viscosidad = 1e-2;
-    
+%% Fx, Fy
+[Fx, Fy] = gradient(abs(gradient(double(img)).^2));
+[mx,my]  = meshgrid(1:row,1:col);
+
+
+%% Useful vars    
 number_of_points = length(x);
 number_of_segments = number_of_points-2;
 
 for iteration=1:200
+    %Plot control poligon
     figure(1)
     plot(x,y,'--r')
     set(gca,'YDir','reverse');
     hold on
     %pause
     
+    C_s = struct([]);
     for j=2:1:number_of_points-1
         
         px(1) = x(j-1);
@@ -76,9 +85,12 @@ for iteration=1:200
         
         %Number of segments depends on number of control points
         i = j - 1;
-        fprintf('segment: %d\n',i)
+        fprintf('segment: %d\n',i);
+        
+        %Segment Cs(i)
         C_s(i).x = eval(Sx);
         C_s(i).y = eval(Sy);
+        
         plot(C_s(i).x,C_s(i).y,'-y')
         set(gca,'YDir','reverse');
         hold on
@@ -120,8 +132,8 @@ for iteration=1:200
         sumy(2) = sum_y(j);
         sumy(3) = sum_y(j+1);
         
-        delta_x = viscosidad*invBm*sumx';
-        delta_y = viscosidad*invBm*sumy';
+        delta_x = viscosidad*Bm_inv*sumx';
+        delta_y = viscosidad*Bm_inv*sumy';
         
         %figure(3)
         %plot(iteration,delta_y)
