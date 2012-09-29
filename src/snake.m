@@ -1,5 +1,3 @@
-%function [m] = snake(img)
-
 %% Getting Image
 close all;
 clear all;
@@ -138,8 +136,8 @@ for iteration=1:200
         y(j+1)   = y(j+1)   + delta_y(3);
     end
 end
-%figure, imshow(img,[])
-%hold on
+figure, imshow(img,[])
+hold on
 plot(x,y,'--r')
 set(gca,'YDir','reverse');
 hold on

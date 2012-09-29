@@ -17,32 +17,43 @@
 \section{Pregunta 1}
 \begin{figure}[ht!]
   \centering
-  \subfloat[Cluster no supervisado]{\label{fig:img1a}\includegraphics[width=0.50\textwidth]{img/clusters.eps}}
+  \subfloat[Cluster no supervisado:Imagen inicial]{\label{fig:img1a}\includegraphics[width=0.50\textwidth]{img/clusters.eps}}
   ~ 
   \caption{Cluster no supervisado}
   \label{fig:p1}
 \end{figure}
 
 \section{Pregunta 2}
-Sin embargo los resultados no son los esperados y se pueden ver en \ref{fig:p2}
+Se pudo lograr que snakes podieran recorrer el contorno de los b-splines, con 200 iteraciones. El resultado final se puede ver en \ref{fig:p2}
 \begin{figure}[ht!]
   \centering
-  \subfloat[Snakes]{\label{fig:img2}\includegraphics[width=0.80\textwidth]{img/snake.eps}}
+  \subfloat[Snakes: Resultado final]{\label{fig:img2}\includegraphics[width=0.80\textwidth]{img/snake_2.eps}}
   ~ 
-  \caption{Snakes}
+  \caption{Azul: Puntos de control iniciales. Amarillo: b-spline.  Rojo: poligono de control}
   \label{fig:p2}
 \end{figure}
-Se utilizaron 4 puntos de control y luego los cuatro siguiente, con el resultado obtenido. Como se puede apreciar claramente, no es una curva continua
-por lo que lo mas probable es que no este bien aplicado el metodo. Los puntos en azul son los puntos de control de la curva.
 
+Se puede decir que snakes, depende principalmente del factor viscosidad, y tambien del factor elasticidad, siendo el factor viscosidad el mas influyente en las pruebas realizadas.
+\begin{figure}[ht!]
+  \centering
+  \subfloat[Snakes: Resultado final]{\label{fig:img22}\includegraphics[width=0.50\textwidth]{img/snake_2.eps}}
+  ~ 
+  \subfloat[Snakes: b-spline en cada iteracion]{\label{fig:img23}\includegraphics[width=0.50\textwidth]{img/snake_3.eps}}
+  ~ 
+  \caption{Azul: Puntos de control iniciales, Amarillo, b-spline, Rojo, poligono de control. }
+  \label{fig:p2b}
+\end{figure}
+En la figura \ref{fig:p2b} se ve todas las variaciones que tuvo b-spline en cada iteracion.
+
+\newpage
 \section{Pregunta 3}
 \begin{figure}[ht!]
   \centering
-  \subfloat[B-Spline, Casteljau: Puntos de control en azul]{\label{fig:img4}\includegraphics[width=0.50\textwidth]{img/balloon.eps}}
+  \subfloat[balloons]{\label{fig:img4}\includegraphics[width=0.50\textwidth]{img/balloon.eps}}
   ~ 
-  \subfloat[B-Spline, Casteljau: Puntos de control en azul]{\label{fig:img4}\includegraphics[width=0.50\textwidth]{img/filtro_gauss.eps}}
+  \subfloat[balloons, con filtro gauss]{\label{fig:img4}\includegraphics[width=0.50\textwidth]{img/filtro_gauss.eps}}
   ~ 
-  \caption{B-Splines calculado usando Casteljau}
+  \caption{Ballons}
   \label{fig:p4}
 \end{figure}
 
