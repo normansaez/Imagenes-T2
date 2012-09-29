@@ -1,3 +1,4 @@
+%% Getting Image
 close all;
 clear all;
 img_dir = '../img';
@@ -5,6 +6,7 @@ addpath(img_dir);
 filename = fullfile(img_dir,'football.jpeg');
 img = imread(filename);
 img = rgb2gray(img);
+img = filtro_gauss(img);
 figure(1)
 imshow(img,[]);
 hold on
@@ -15,10 +17,10 @@ init_y = y;
  
     
 % Control poligon
-x(length(x)+1) = x(1);
-y(length(y)+1) = y(1);
-x(length(x)+1) = x(2);
-y(length(y)+1) = y(2);
+x(end+1) = x(1);
+y(end+1) = y(1);
+x(end+1) = x(2);
+y(end+1) = y(2);
 % Control poligon
 
 B = 0.5*[1,1,0;-2 2 0;1 -2 1];
@@ -134,6 +136,10 @@ for iteration=1:200
         y(j)     = y(j)     + delta_y(2);
         y(j+1)   = y(j+1)   + delta_y(3);
     end
+    x(end-1) = x(1);
+    y(end-1) = y(1);
+    x(end)   = x(2);
+    y(end)   = y(2);
 end
 figure, imshow(img,[])
 hold on

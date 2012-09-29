@@ -24,37 +24,48 @@
 \end{figure}
 
 \section{Pregunta 2}
-Se pudo lograr que snakes podieran recorrer el contorno de los b-splines, con 200 iteraciones. El resultado final se puede ver en \ref{fig:p2}
+Se pudo lograr que snakes pudieran recorrer el contorno de los b-splines, con 200 iteraciones. El resultado final se puede ver en \ref{fig:p2}
 \begin{figure}[ht!]
   \centering
   \subfloat[Snakes: Resultado final]{\label{fig:img2}\includegraphics[width=0.80\textwidth]{img/snake_2.eps}}
   ~ 
-  \caption{Azul: Puntos de control iniciales. Amarillo: b-spline.  Rojo: poligono de control}
+  \caption{Azul: Puntos de control iniciales. Amarillo: b-spline.  Rojo: polígono de control}
   \label{fig:p2}
 \end{figure}
 
-Se puede decir que snakes, depende principalmente del factor viscosidad, y tambien del factor elasticidad, siendo el factor viscosidad el mas influyente en las pruebas realizadas.
+Se puede decir que snakes, depende principalmente del factor viscosidad, y
+también del factor elasticidad, siendo el factor viscosidad el mas influyente
+en las pruebas realizadas.
 \begin{figure}[ht!]
   \centering
   \subfloat[Snakes: Resultado final]{\label{fig:img22}\includegraphics[width=0.50\textwidth]{img/snake_2.eps}}
   ~ 
-  \subfloat[Snakes: b-spline en cada iteracion]{\label{fig:img23}\includegraphics[width=0.50\textwidth]{img/snake_3.eps}}
+  \subfloat[Snakes: b-spline en cada iteración]{\label{fig:img23}\includegraphics[width=0.50\textwidth]{img/snake_3.eps}}
   ~ 
-  \caption{Azul: Puntos de control iniciales, Amarillo, b-spline, Rojo, poligono de control. }
+  \caption{Azul: Puntos de control iniciales, Amarillo, b-spline, Rojo, polígono de control. }
   \label{fig:p2b}
 \end{figure}
-En la figura \ref{fig:p2b} se ve todas las variaciones que tuvo b-spline en cada iteracion.
+En la figura \ref{fig:p2b} se ve todas las variaciones que tuvo b-spline en
+cada iteración.  El problema principal es que habría que definir un limite para
+que el algoritmo converja. De lo contrario, se tiene que imponer a priori una
+cantidad limitada de iteraciones.  Otra manera de resolver este problema es
+simplemente asignando como condición de termino un pequeño margen de error, y
+cuando alcance este margen de error dar por terminada las iteraciones
 
 \newpage
 \section{Pregunta 3}
+En esta seccion, la modificacion a la pregunta dos fue solamente aplicar filtro gaussiano a la imagen.
+
 \begin{figure}[ht!]
   \centering
   \subfloat[balloons]{\label{fig:img4}\includegraphics[width=0.50\textwidth]{img/balloon.eps}}
   ~ 
-  \subfloat[balloons, con filtro gauss]{\label{fig:img4}\includegraphics[width=0.50\textwidth]{img/filtro_gauss.eps}}
+  \subfloat[balloons, con filtro gauss]{\label{fig:img4}\includegraphics[width=0.50\textwidth]{img/balloon_2.eps}}
   ~ 
-  \caption{Ballons}
+  \caption{Balloons: Azul: Puntos de control iniciales. Amarillo: b-spline.  Rojo: polígono de control}
   \label{fig:p4}
+
+No se aprecina grandes cambios, se necesitan mas pruebas para poder determinar cual es el efecto que tiene el filtro sobre la imagen. Ademas es necesario incluir balloons.
 \end{figure}
 
 \end{document}
